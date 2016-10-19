@@ -32,8 +32,20 @@ object LogStreamingLocal {
   .set("spark.cassandra.connection.keep_alive_ms", "60000");
 
  Streaming.setStreamingLogLevels();
- val directotyName = "/Users/username/Documents/Demo/1/";
- val hdfsURI = "";
+ 
+ //localhost:9092
+//stream
+//""
+///Users/username/Documents/1/
+//30  
+
+ val brokers = args(0);
+ val topicname =args(1); 
+ val hdfsURI = args(2);
+ val directotyName = args(3);
+ val seconds = args(4);
+ 
+ 
  //val hdfsURI = "hdfs://localhost:9000";
   val sourcedir = "source/";
  val resultdir = "result/";
@@ -46,9 +58,9 @@ object LogStreamingLocal {
  
     val ssc = new StreamingContext(conf, Seconds(5))
 
-    val kafkaParams = Map("metadata.broker.list" -> args(0))
+    val kafkaParams = Map("metadata.broker.list" -> brokers)
      
-    val topics = Set(args(1))
+    val topics = Set(seconds)
 
     val stream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](
     ssc, kafkaParams, topics)

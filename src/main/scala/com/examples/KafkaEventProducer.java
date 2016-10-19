@@ -49,7 +49,7 @@ public class KafkaEventProducer {
      
      public static String getImage() {
     	 
-         File file = new File("/Users/username/Desktop/Rainbow.jpg");
+         File file = new File("/res/Rainbow.jpg");
          String imageDataString = null;
          try {            
              // Reading a Image file from file system

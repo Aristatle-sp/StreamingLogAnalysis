@@ -24,8 +24,8 @@ val conf = new SparkConf().setAppName("TopNCluster");
 //.set("spark.driver.host","127.0.0.1");
 
 val spark = new SparkContext(conf)
-
-spark.textFile(args(0))
+val filepath = args(0);
+spark.textFile(filepath)
             
             .saveAsTextFile(args(1)+(System.currentTimeMillis).toString());
 spark.stop()
