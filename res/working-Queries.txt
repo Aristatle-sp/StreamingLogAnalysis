@@ -1,0 +1,202 @@
+Cassandra Query
+
+
+CREATE TABLE compare.summary (
+    runid text,
+    source1 text,
+    source2 text,
+    totalrecords int,
+    timetaken text,
+    diff_s2_missing int,
+    diff_s2_additional int,
+    time timestamp, 	
+    PRIMARY KEY (runid, time)
+) WITH CLUSTERING ORDER BY (time DESC)
+
+
+
+CREATE TABLE compare.diff_details (
+    runid text,
+    source1 text,
+    source2 text,
+    s1_ids list<text>,
+    s2_ids list<text>,
+    time timestamp, 	
+    PRIMARY KEY (runid, time)
+) WITH CLUSTERING ORDER BY (time DESC)
+
+
+bin/hdfs dfs -put /Users/username/Documents/compare/data.csv /user/hive/warehouse/
+
+
+COPY personaldetails
+(id , Gender , NameSet , Title , GivenName , MiddleInitial , Surname , StreetAddress , City , ZipCode , Country , CountryFull ,  Username , Password , Age , TropicalZodiac , CCType , CVV2 , CCExpires , WesternUnion , MoneyGram , Color , Occupation , Company , Vehicle , Domain ,  Pounds , Kilograms)
+ FROM '/Users/username/Documents/compare/data.csv'
+
+delete  from PersonalDetails where id = 12987676;
+update PersonalDetails set city='new' where id=121478 and  country='GB' and age=21 ;
+insert into PersonalDetails (id,country,age) values(100009876,'USA',22);
+
+
+load data local infile '/Users/username/Documents/compare/data.csv'
+ into table PersonalDetails
+ fields terminated by ','
+ enclosed by '"'
+ lines terminated by '\n';
+
+delete  from PersonalDetails where id =0;
+update PersonalDetails set age=19 where id=1;
+insert into PersonalDetails (id) values(100009876);
+
+
+
+CREATE TABLE compare.personaldetails (
+    id int,
+    country text,
+    age int,
+    ccexpires text,
+    cctype text,
+    city text,
+    color text,
+    company text,
+    countryfull text,
+    cvv2 int,
+    domain text,
+    gender text,
+    givenname text,
+    kilograms text,
+    middleinitial text,
+    moneygram text,
+    nameset text,
+    occupation text,
+    password text,
+    pounds text,
+    streetaddress text,
+    surname text,
+    title text,
+    tropicalzodiac text,
+    username text,
+    vehicle text,
+    westernunion text,
+    zipcode text,
+    PRIMARY KEY (id, country, age)
+) WITH CLUSTERING ORDER BY (country ASC, age ASC)
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+
+
+COPY personaldetails
+(id , Gender , NameSet , Title , GivenName , MiddleInitial , Surname , StreetAddress , City , ZipCode , Country , CountryFull ,  Username , Password , Age , TropicalZodiac , CCType , CVV2 , CCExpires , WesternUnion , MoneyGram , Color , Occupation , Company , Vehicle , Domain ,  Pounds , Kilograms)
+ FROM '/Users/username/Documents/compare/dummy1.csv'
+ 
+——————————————
+
+MYSQL
+
+CREATE TABLE PersonalDetails
+(
+ID int PRIMARY KEY,
+Gender varchar(100),
+NameSet varchar(100),
+Title varchar(10),
+GivenName varchar(100),
+MiddleInitial varchar(10),
+Surname varchar(100),
+StreetAddress varchar(100),
+City varchar(50),
+ZipCode varchar(10),
+Country varchar(5),
+CountryFull varchar(50),
+Username varchar(50),
+Passwd varchar(50),
+Age varchar(3),
+TropicalZodiac varchar(50),
+CCType varchar(15),
+CVV2 varchar(20),
+CCExpires varchar(50),
+WesternUnion varchar(50),
+MoneyGram varchar(50),
+Color varchar(10),
+Occupation varchar(100),
+Company varchar(100),
+Vehicle varchar(100),
+Domain varchar(100),
+Pounds varchar(15),
+Kilograms varchar(15)
+);
+
+CREATE TABLE `PersonalDetails11` (
+  `ID` int(11) NOT NULL,
+  `Gender` varchar(100) DEFAULT NULL,
+  `NameSet` varchar(100) DEFAULT NULL,
+  `Title` varchar(10) DEFAULT NULL,
+  `GivenName` varchar(100) DEFAULT NULL,
+  `MiddleInitial` varchar(10) DEFAULT NULL,
+  `Surname` varchar(100) DEFAULT NULL,
+  `StreetAddress` varchar(100) DEFAULT NULL,
+  `City` varchar(50) DEFAULT NULL,
+  `ZipCode` varchar(10) DEFAULT NULL,
+  `Country` varchar(5) DEFAULT NULL,
+  `CountryFull` varchar(50) DEFAULT NULL,
+  `Username` varchar(50) DEFAULT NULL,
+  `Passwd` varchar(50) DEFAULT NULL,
+  `Age` varchar(3) DEFAULT NULL,
+  `TropicalZodiac` varchar(50) DEFAULT NULL,
+  `CCType` varchar(15) DEFAULT NULL,
+  `CVV2` varchar(20) DEFAULT NULL,
+  `CCExpires` varchar(50) DEFAULT NULL,
+  `WesternUnion` varchar(50) DEFAULT NULL,
+  `MoneyGram` varchar(50) DEFAULT NULL,
+  `Color` varchar(10) DEFAULT NULL,
+  `Occupation` varchar(100) DEFAULT NULL,
+  `Company` varchar(100) DEFAULT NULL,
+  `Vehicle` varchar(100) DEFAULT NULL,
+  `Domain` varchar(100) DEFAULT NULL,
+  `Pounds` varchar(15) DEFAULT NULL,
+  `Kilograms` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+
+
+LOAD
+
+load data local infile '/Users/username/Documents/compare/one.csv'
+ into table PersonalDetails
+ fields terminated by ','
+ enclosed by '"'
+ lines terminated by '\n';
+
+delete  from PersonalDetails where id =0;
+update PersonalDetails set age=19 where id=1;
+insert into PersonalDetails (id) values(100009876);
+
+——————————
+
+Hive Query
+
+CREATE EXTERNAL TABLE IF NOT EXISTS PersonalDetails(id String, Gender String , NameSet String , Title String , GivenName String , MiddleInitial String , Surname String , StreetAddress String, City String , ZipCode String ,Country String, CountryFull String , Username String , Password String , Age Int, TropicalZodiac String , CCType String , CVV2 String, CCExpires String , WesternUnion String , MoneyGram String , Color String , Occupation String , Company String , Vehicle String , Domain String , Pounds String, Kilograms String) COMMENT 'PersonalDetails' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' STORED AS TEXTFILE LOCATION 'hdfs:/localhost:9000/user/hive/warehouse'
+
+
+
+HDFS
+———————————
+/Users/username/Documents/softwares/hadoop-2.7.2
+bin/hdfs dfs -put /Users/username/Documents/compare/one.csv /user/hive/warehouse/
+bin/hdfs dfs -rm -r /user/username/*
+bin/hdfs dfs -rm -r /user/hive/warehouse/*
+
+bin/hdfs dfs -cp /user/hive/warehouse/source/hive/* /user/hive/warehouse/source/hive/newfile.csv
+
